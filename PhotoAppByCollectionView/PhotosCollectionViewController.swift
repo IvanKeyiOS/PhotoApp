@@ -15,21 +15,22 @@ class PhotosCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-//        layout.itemSize = CGSize(width: 70, height: 70)
-//        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-//        layout.minimumLineSpacing = 20
-//        layout.minimumInteritemSpacing = 20
-//        layout.scrollDirection = .vertical
-//        
-//        collectionView.showsVerticalScrollIndicator = false
+        
     }
-    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "PhotoStoryboard", bundle: nil)
+        let viewController = storyboard.instantiateViewController(withIdentifier: "PhotoViewController") as! PhotoViewController
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell
+        let imageName = photos[indexPath.item]
+        let image = UIImage(named: imageName)
+        cell?.motImageView.image = image
+        viewController.image = cell!.motImageView.image
+        present(viewController, animated: true)
+    }
+
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photos.count
@@ -49,7 +50,6 @@ class PhotosCollectionViewController: UICollectionViewController {
 
 extension PhotosCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         let paddingWidth = sectionInserts.left * (itemsPerRow + 1)
         let availableWidth = collectionView.frame.width - paddingWidth
         let widthPerItem = availableWidth / itemsPerRow
